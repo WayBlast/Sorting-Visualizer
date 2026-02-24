@@ -8,7 +8,8 @@ from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import pyqtSlot, QTimer, Qt
 from matplotlib.figure import Figure
 import random
-
+from algorithms.bubblesort import BubbleSort
+from algorithms.insertionsort import InsertionSort
 
 
 NO_ELEMENTS = 25
@@ -29,6 +30,7 @@ class ApplicationWindow(QMainWindow):
 
         title = "Sorting Visualizer"
         self.setWindowTitle(title)
+        self.setFixedSize(500,600)
 
         self._createActions()
         self._createMenuBar()
@@ -149,12 +151,14 @@ class ApplicationWindow(QMainWindow):
     
         match self.sort:
             case 'Bubble Sort':
-                self.generator = bubblesort(self.values)
+                self.algo = BubbleSort(self.values)
+                self.generator = self.algo.generator()
                 self.last = [self.barcollection[0],self.barcollection[1]]
                 self.barrier = [len(self.values)-1]
                 self.finish_index = [0]
             case 'Insertion Sort':
-                self.generator = insertionsort(self.values)
+                self.algo = InsertionSort(self.values)
+                self.generator = self.algo.generator()
                 self.barrier = [0] 
                 self.finish_index = [0]
         
@@ -241,7 +245,7 @@ class ApplicationWindow(QMainWindow):
         i, j, values, edge  = frame
         if edge == -1:
             if self.finish_index[0] == 0:
-                self.anim.event_source.interval = 80
+                self.anim.event_source.interval = 50
                 self.barcollection[self.finish_index[0]].set_color(FINISH_COLOR)
 
             if self.finish_index[0] == len(self.barcollection):
@@ -304,48 +308,8 @@ class ApplicationWindow(QMainWindow):
     def closeEvent(self, event):
         super().closeEvent(event)      
 
-def bubblesort(values: list[int]):
-    i = 0
-    barrier = len(values) - 1
-    
-    while True:
-        edge = 0
-        if barrier == 0:
-            while True:
-                
-                edge = -1
-                yield (i,i+1,values, edge)
-
-        if i == barrier:
-            i = 0
-            barrier -= 1
-            edge = 1
-            
-        if values[i+1] < values[i]:
-                
-                temp = values[i+1]
-                values[i+1] = values[i]
-                values[i] = temp
-        yield (i,i+1,values, edge)
-        i+=1     
-
-def insertionsort(values: list[int]):
-    for j in range(1, len(values)):
-        key = values[j]
-        i = j-1
-
-        while i >= 0 and values[i] > key:
-            values[i+1] = values[i]
-            i -= 1
-
-            yield (values, i, j, 0)
-        values[i+1] = key 
-        yield (values, i, j, 1)
-    while True:
-        yield (values, i, j, -1)
-
-
 if __name__ =="__main__":
+    
     qapp = QApplication.instance()
     if not qapp:
         qapp = QApplication(sys.argv)

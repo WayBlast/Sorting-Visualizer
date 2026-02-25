@@ -1,19 +1,12 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtCore import pyqtSlot, QTimer, Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvas
-import matplotlib.pyplot as plt
-import numpy as np
-import matplotlib.animation as animation
-import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QFont
-from PyQt5.QtCore import pyqtSlot, QTimer, Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
 from matplotlib.figure import Figure
-import random
-from algorithms.bubblesort import BubbleSort
-from algorithms.insertionsort import InsertionSort
 import sortingAnim
 import json
 import os

@@ -1,0 +1,11 @@
+{
+"themes":{
+    "default":{
+        "primaryColor":"deepskyblue",
+        "secondaryColor":"yellowgreen",
+        "tertiaryColor":"darkorange",
+        "quarternaryColor":"yellow",
+        "finishColor":"green"
+    }
+}
+}

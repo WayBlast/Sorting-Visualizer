@@ -114,7 +114,7 @@ class SortingAnimation():
         else:
             for idx in self.last:  
                 self.barcollection[idx].set_color(
-                self.secondary_color if idx < self.barrier[0] else self.primary_color
+                self.secondary_color if idx <= self.barrier[0] else self.primary_color
                 )
                 self.barcollection[idx].set_height(values[idx])
             
@@ -196,5 +196,11 @@ class SortingAnimation():
     def change_sort(self, sort: str):
         self.sort = sort
         self.handle_shuffle()
+
+        self.animation_button.blockSignals(True)
+        self.animation_button.setChecked(False)
+        self.animation_button.setText("Run")
+        self.animation_button.blockSignals(False)
+
 
     

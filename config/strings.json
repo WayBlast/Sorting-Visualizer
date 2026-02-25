@@ -1,0 +1,7 @@
+{
+"appTitle": "Sorting Vizualizer",
+"description":{
+    "bubbleSort":"Bubble Sort is a simple comparison-based sorting algorithm that repeatedly compares adjacent elements and swaps them if they are in the wrong order. After each pass, the largest unsorted element “bubbles” to its correct position at the end of the array.<br><br><b>Time Complexity:</b> Best: O(n), Average: O(n<sup>2</sup>), Worst: O(n<sup>2</sup>)<br><b>Space Complexity:</b> O(1) &nbsp;&nbsp; <b>Stable:</b> Yes &nbsp;&nbsp; <b>In-Place:</b> Yes",
+    "insertionSort":"Insertion Sort is a simple comparison-based sorting algorithm that builds the sorted array one element at a time by inserting each new element into its correct position within the already sorted portion. It shifts larger elements to the right to make space for the current key.<br><br><b>Time Complexity:</b> Best: O(n), Average: O(n<sup>2</sup>), Worst: O(n<sup>2</sup>)<br><b>Space Complexity:</b> O(1) &nbsp;&nbsp; <b>Stable:</b> Yes &nbsp;&nbsp; <b>In-Place:</b> Yes"
+}
+}

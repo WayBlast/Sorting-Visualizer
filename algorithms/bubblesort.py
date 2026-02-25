@@ -2,14 +2,12 @@ from algorithms.sort import Sort
 
 class BubbleSort(Sort):
     def __init__(self, values):
-        print("MODULE EXECUTING")
         self.values = values
         self.edge = 0
         self.barrier = len(values)-1
 
     def generator(self):
         i = 0
-        barrier = len(self.values) - 1
         
         while True:
             self.edge = 0

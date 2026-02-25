@@ -17,13 +17,17 @@ MAX_VALUE = NO_ELEMENTS
 class ApplicationWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        
         base_dir = os.path.dirname(os.path.abspath(__file__))
         strings_file_path = os.path.join(base_dir, "config", "strings.json")
-
+        themes_file_path = os.path.join(base_dir, "config","style.json")
         with open(strings_file_path, "r", encoding="utf-8") as f:
             self.strings = json.load(f)
-    
+        with open(themes_file_path, "r", encoding="utf-8") as f:
+            self.themes = json.load(f)
+
+        self.setStyleSheet(self.themes["themes"]["default"]["stylesheet"])
+
         title = self.strings['appTitle']
         self.setWindowTitle(title)
         self.setFixedSize(500,600)
@@ -35,8 +39,9 @@ class ApplicationWindow(QMainWindow):
 
         self.canvas = FigureCanvas(Figure(figsize=(5, 3)))
         self.ax = self.canvas.figure.subplots()
+        self.canvas.figure.set_facecolor("#f2f2f2")
+        self.ax.set_facecolor("#f2f2f2")
 
-        
         self.animation = sortingAnim.SortingAnimation(self.canvas, self.ax, "Bubble Sort", self.no_values)
         self.animation.generateData()
         self.animation.draw()     
@@ -109,24 +114,32 @@ class ApplicationWindow(QMainWindow):
         algoSelectMenu.addAction(self.selectionAction)
 
         numberMenu = settingsMenu.addMenu("Number...")
-
         for n in (10, 25, 50, 75, 99):
             numberMenu.addAction(
                 str(n),
                 lambda _=False, x=n: self.animation.set_number(x)
             )
         settingsMenu.addAction(self.speedAction)
+        themeMenu = settingsMenu.addMenu("Theme...")
+
+        themeMenu.addAction("Default", lambda checked = False: self.setTheme("default"))
+        themeMenu.addAction("Dark", lambda checked = False: self.setTheme("dark"))
+        
         menuBar.addMenu(QMenu("&Help", self))
 
     def _connectActions(self):
         self.bubbleAction.triggered.connect(lambda checked = False: self.change_sort("Bubble Sort"))
         self.insertionAction.triggered.connect(lambda checked = False: self.change_sort("Insertion Sort"))
+        self.selectionAction.triggered.connect(lambda checked = False: self.change_sort("Selection Sort"))
 
     def _createActions(self):
         self.numberAction = QAction(self)
         self.numberAction.setText("&Number")
         self.speedAction = QAction(self)
         self.speedAction.setText("&Speed")
+        self.themeAction = QAction(self)
+        self.themeAction.setText("&Theme")
+
 
         self.bubbleAction = QAction(self)
         self.bubbleAction.setText("&Bubble Sort")
@@ -143,6 +156,8 @@ class ApplicationWindow(QMainWindow):
                 self.description.setText(self.strings['description']['bubbleSort'])
             case "Insertion Sort":
                 self.description.setText(self.strings['description']['insertionSort'])
+            case "Selection Sort":
+                self.description.setText(self.strings['description']['selectionSort'])
 
     def handle_shuffle(self):
         self.animation_button.blockSignals(True)
@@ -160,6 +175,11 @@ class ApplicationWindow(QMainWindow):
             self.animation_button.setText("Stop")
         else:
             self.animation_button.setText("Run")
+
+    def setTheme(self, theme):
+        self.animation.set_theme(theme)
+        self.setStyleSheet(self.themes["themes"][theme]["stylesheet"])
+
 
     def closeEvent(self, event):
         super().closeEvent(event)      

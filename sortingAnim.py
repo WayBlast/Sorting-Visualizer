@@ -10,6 +10,7 @@ from matplotlib.figure import Figure
 import random
 from algorithms.bubblesort import BubbleSort
 from algorithms.insertionsort import InsertionSort
+from algorithms.selectionsort import SelectionSort
 import json
 import os
 
@@ -22,17 +23,19 @@ class SortingAnimation():
         with open(style_file_path, "r", encoding="utf-8") as f:
             self.colors = json.load(f)
     
-        self.primary_color = self.colors["themes"]["default"]["primaryColor"]
-        self.secondary_color = self.colors["themes"]["default"]["secondaryColor"]
-        self.tertiary_color = self.colors["themes"]["default"]["tertiaryColor"]
-        self.quarternary_color = self.colors["themes"]["default"]["quarternaryColor"]
-        self.finish_color = self.colors["themes"]["default"]["finishColor"]
+        self.primary_color = self.colors["themes"]["default"]["colors"]["primaryColor"]
+        self.secondary_color = self.colors["themes"]["default"]["colors"]["secondaryColor"]
+        self.tertiary_color = self.colors["themes"]["default"]["colors"]["tertiaryColor"]
+        self.quarternary_color = self.colors["themes"]["default"]["colors"]["quarternaryColor"]
+        self.finish_color = self.colors["themes"]["default"]["colors"]["finishColor"]
         
         self.canvas = canvas
         self.ax = ax
         self.sort = sort
         self.no_values = no_values
 
+        self.theme = "default"
+        
     def draw(self):
         
         match self.sort:
@@ -40,6 +43,9 @@ class SortingAnimation():
                 func = self.callback_animation_bubble
             case 'Insertion Sort':
                 func = self.callback_animation_insertion
+            case 'Selection Sort':
+                func = self.callback_animation_selection
+    
             case _:
                 raise Exception("Sorting Algorithm not defined")
 
@@ -94,7 +100,6 @@ class SortingAnimation():
             self.last[0] = self.barcollection[i]
             self.last[1] = self.barcollection[j]
 
-
     def callback_animation_insertion(self, frame):
         values, i, j, edge = frame
         
@@ -137,9 +142,41 @@ class SortingAnimation():
                 self.last[0] = i
                 self.last[1] = j
 
+    def callback_animation_selection(self, frame):
+        
+        i, j, values, edge  = frame
+        if edge == -1:
+            if self.finish_index[0] == 0:
+                self.anim.event_source.interval = 80
+                
+            if self.finish_index[0] == len(self.barcollection):
+                self.animation_button.blockSignals(True)
+                self.animation_button.setChecked(False)
+                self.animation_button.setText("Run")
+                self.animation_button.blockSignals(False)
+
+                self.anim.event_source.stop()
+            else:    
+                self.barcollection[self.finish_index[0]].set_color(self.finish_color)
+                self.finish_index[0] += 1 
+        else: 
+            for bar in self.last:
+                bar.set_color(self.primary_color)
+                
+            for bar in range(0, self.barrier[0]):
+                self.barcollection[bar].set_color(self.secondary_color)
+            if edge == 1 and self.barrier[0] != len(self.barcollection) :
+                self.barrier[0] += 1
+
+            self.barcollection[i].set_height(values[i])
+            self.barcollection[j].set_height(values[j])
+            self.barcollection[i].set_color(self.tertiary_color)
+            self.barcollection[j].set_color(self.quarternary_color)
+            self.last[0] = self.barcollection[i]
+            self.last[1] = self.barcollection[j]
+
     def setSort(self, sort):
         self.sort = sort
-
 
     def set_number(self, n: int):
         self.no_values = n
@@ -175,7 +212,32 @@ class SortingAnimation():
                                          edgecolor='none',
                                          linewidth=0,
                                          color=self.primary_color)
-    
+
+        match self.theme:
+            case "default":
+                # Figure background
+                self.canvas.figure.set_facecolor("#f2f2f2")
+
+                # Axes background
+                self.ax.set_facecolor("#f2f2f2")
+                self.ax.tick_params(colors='black')
+                self.ax.spines['bottom'].set_color("black")
+                self.ax.spines['left'].set_color("black")
+                self.ax.spines['top'].set_color("black")
+                self.ax.spines['right'].set_color("black")
+        
+            case "dark":
+                # Figure background
+                self.canvas.figure.set_facecolor("#323232")
+
+                # Axes background
+                self.ax.set_facecolor("#323232")
+                self.ax.tick_params(colors='white')
+                self.ax.spines['bottom'].set_color("white")
+                self.ax.spines['left'].set_color("white")
+                self.ax.spines['top'].set_color("white")
+                self.ax.spines['right'].set_color("white")
+
         match self.sort:
             case 'Bubble Sort':
                 self.algo = BubbleSort(self.values)
@@ -188,6 +250,12 @@ class SortingAnimation():
                 self.generator = self.algo.generator()
                 self.barrier = [0] 
                 self.last = [0,1]
+                self.finish_index = [0]
+            case 'Selection Sort':
+                self.algo = SelectionSort(self.values)
+                self.generator = self.algo.generator()
+                self.barrier = [0] 
+                self.last = [self.barcollection[0],self.barcollection[1]]
                 self.finish_index = [0]
 
     def setButton(self, animation_button):
@@ -202,5 +270,13 @@ class SortingAnimation():
         self.animation_button.setText("Run")
         self.animation_button.blockSignals(False)
 
-
-    
+    def set_theme(self, theme):
+        self.theme = theme
+        self.primary_color = self.colors["themes"][theme]["colors"]["primaryColor"]
+        self.secondary_color = self.colors["themes"][theme]["colors"]["secondaryColor"]
+        self.tertiary_color = self.colors["themes"][theme]["colors"]["tertiaryColor"]
+        self.quarternary_color = self.colors["themes"][theme]["colors"]["quarternaryColor"]
+        self.finish_color = self.colors["themes"][theme]["colors"]["finishColor"]
+        
+        self.handle_shuffle()
+        

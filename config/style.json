@@ -1,11 +1,25 @@
 {
 "themes":{
     "default":{
-        "primaryColor":"deepskyblue",
-        "secondaryColor":"yellowgreen",
-        "tertiaryColor":"darkorange",
-        "quarternaryColor":"yellow",
-        "finishColor":"green"
+        "colors":{
+            "primaryColor":"deepskyblue",
+            "secondaryColor":"turquoise",
+            "tertiaryColor":"yellow",
+            "quarternaryColor":"darkorange",
+            "finishColor":"green"
+        },
+        "stylesheet":"QWidget{color:#2b2b2b;background-color:#f2f2f2;}QWidget:item:hover{background-color:QLinearGradient(x1:0,y1:0,x2:0,y2:1,stop:0 #ffd27f,stop:1 #ff6b6b);color:#000000;}QMenu{border:1px solid #bdbdbd;}QPushButton{color:#2b2b2b;background-color:QLinearGradient(x1:0,y1:0,x2:0,y2:1,stop:0 #ffffff,stop:0.1 #f5f5f5,stop:0.5 #ebebeb,stop:0.9 #e0e0e0,stop:1 #d6d6d6);border-width:1px;border-color:#bdbdbd;border-style:solid;border-radius:6;padding:3px;padding-left:5px;padding-right:5px;min-width:40px;}QPushButton:pressed{background-color:QLinearGradient(x1:0,y1:0,x2:0,y2:1,stop:0 #e0e0e0,stop:0.1 #d6d6d6,stop:0.5 #cccccc,stop:0.9 #c2c2c2,stop:1 #b8b8b8);}"
+    },
+    "dark": {
+        "colors":{
+            "primaryColor": "tan",      
+            "secondaryColor": "darkorange",    
+            "tertiaryColor": "gold",     
+            "quarternaryColor": "brown",  
+            "finishColor": "tan"  
+        },
+        "stylesheet":"QWidget{color:#b1b1b1;background-color:#323232;}QWidget:item:hover{background-color:QLinearGradient(x1:0,y1:0,x2:0,y2:1,stop:0 #ffa02f,stop:1 #ca0619);color:#000000;}QMenu{border:1px solid #000;}QPushButton{color:#b1b1b1;background-color:QLinearGradient(x1:0,y1:0,x2:0,y2:1,stop:0 #565656,stop:0.1 #525252,stop:0.5 #4e4e4e,stop:0.9 #4a4a4a,stop:1 #464646);border-width:1px;border-color:#1e1e1e;border-style:solid;border-radius:6;padding:3px;padding-left:5px;padding-right:5px;min-width:40px;}QPushButton:pressed{background-color:QLinearGradient(x1:0,y1:0,x2:0,y2:1,stop:0 #2d2d2d,stop:0.1 #2b2b2b,stop:0.5 #292929,stop:0.9 #282828,stop:1 #252525);}"   
     }
 }
+
 }

@@ -112,6 +112,9 @@ class ApplicationWindow(QMainWindow):
         algoSelectMenu.addAction(self.bubbleAction)
         algoSelectMenu.addAction(self.insertionAction)
         algoSelectMenu.addAction(self.selectionAction)
+        algoSelectMenu.addSeparator()
+        algoSelectMenu.addAction(self.mergeAction)
+
 
         numberMenu = settingsMenu.addMenu("Number...")
         for n in (10, 25, 50, 75, 99):
@@ -119,24 +122,27 @@ class ApplicationWindow(QMainWindow):
                 str(n),
                 lambda _=False, x=n: self.animation.set_number(x)
             )
-        settingsMenu.addAction(self.speedAction)
+        
         themeMenu = settingsMenu.addMenu("Theme...")
 
         themeMenu.addAction("Default", lambda checked = False: self.setTheme("default"))
         themeMenu.addAction("Dark", lambda checked = False: self.setTheme("dark"))
         
+        settingsMenu.addSeparator()
+        settingsMenu.addAction(self.exitAction)
+
         menuBar.addMenu(QMenu("&Help", self))
 
     def _connectActions(self):
         self.bubbleAction.triggered.connect(lambda checked = False: self.change_sort("Bubble Sort"))
         self.insertionAction.triggered.connect(lambda checked = False: self.change_sort("Insertion Sort"))
         self.selectionAction.triggered.connect(lambda checked = False: self.change_sort("Selection Sort"))
+        self.mergeAction.triggered.connect(lambda checked = False: self.change_sort("Merge Sort")) 
+        self.exitAction.triggered.connect(self.close)
 
     def _createActions(self):
         self.numberAction = QAction(self)
         self.numberAction.setText("&Number")
-        self.speedAction = QAction(self)
-        self.speedAction.setText("&Speed")
         self.themeAction = QAction(self)
         self.themeAction.setText("&Theme")
 
@@ -147,6 +153,11 @@ class ApplicationWindow(QMainWindow):
         self.insertionAction.setText("&Insertion Sort")
         self.selectionAction = QAction(self)
         self.selectionAction.setText("&Selection Sort")
+        self.mergeAction = QAction(self)
+        self.mergeAction.setText("&Merge Sort")
+
+        self.exitAction = QAction(self)
+        self.exitAction.setText("&Exit")
 
     def change_sort(self, sort: str):
         self.animation.change_sort(sort)
@@ -158,6 +169,8 @@ class ApplicationWindow(QMainWindow):
                 self.description.setText(self.strings['description']['insertionSort'])
             case "Selection Sort":
                 self.description.setText(self.strings['description']['selectionSort'])
+            case "Merge Sort":
+                self.description.setText(self.strings['description']['mergeSort'])
 
     def handle_shuffle(self):
         self.animation_button.blockSignals(True)

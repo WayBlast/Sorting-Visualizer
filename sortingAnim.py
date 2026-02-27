@@ -11,6 +11,7 @@ import random
 from algorithms.bubblesort import BubbleSort
 from algorithms.insertionsort import InsertionSort
 from algorithms.selectionsort import SelectionSort
+from algorithms.mergesort import MergeSort
 import json
 import os
 
@@ -45,7 +46,10 @@ class SortingAnimation():
                 func = self.callback_animation_insertion
             case 'Selection Sort':
                 func = self.callback_animation_selection
+            case 'Merge Sort':
+                func = self.callback_animation_merge
     
+
             case _:
                 raise Exception("Sorting Algorithm not defined")
 
@@ -89,7 +93,7 @@ class SortingAnimation():
 
             if edge == 1:
                 
-                self.barcollection[self.barrier[0]].set_color(self.secondary_color)
+                self.barcollection[self.barrier[0]].set_color(self.primary_color)
                 self.barrier[0] -= 1
             
             self.barcollection[i].set_color(self.tertiary_color)
@@ -123,7 +127,6 @@ class SortingAnimation():
                 )
                 self.barcollection[idx].set_height(values[idx])
             
-            
             if i >= 0 and j >= 0:
                 self.barcollection[i].set_height(values[i])
                 self.barcollection[i].set_color(self.tertiary_color)
@@ -134,7 +137,7 @@ class SortingAnimation():
             
             # Performance killer
             for bar in range(0, self.barrier[0]):
-                self.barcollection[bar].set_color(self.secondary_color)
+                self.barcollection[bar].set_color(self.primary_color)
             if i >= 0 and j >= 0:
                 self.barcollection[i].set_color(self.tertiary_color)
                 self.barcollection[j].set_color(self.quarternary_color)
@@ -175,12 +178,45 @@ class SortingAnimation():
             self.last[0] = self.barcollection[i]
             self.last[1] = self.barcollection[j]
 
+    def callback_animation_merge(self, frame):
+        
+        start, end, c, values, edge  = frame
+        if edge == -1:
+            if self.finish_index[0] == 0:
+                self.anim.event_source.interval = 80
+                
+            if self.finish_index[0] == len(self.barcollection):
+                self.animation_button.blockSignals(True)
+                self.animation_button.setChecked(False)
+                self.animation_button.setText("Run")
+                self.animation_button.blockSignals(False)
+
+                self.anim.event_source.stop()
+            else:    
+                self.barcollection[self.finish_index[0]].set_color(self.finish_color)
+                self.finish_index[0] += 1 
+        else: 
+            
+            for i in range(start, end):
+                self.barcollection[i].set_height(values[i])
+                self.barcollection[i].set_color(self.quarternary_color)
+
+            if (c>0):
+                self.barcollection[c-1].set_color(self.secondary_color)
+                self.barcollection[c-1].set_height(values[c-1])
+            else:
+                self.barcollection[c].set_color(self.secondary_color)
+                self.barcollection[c].set_height(values[c])
+
+
     def setSort(self, sort):
         self.sort = sort
+
 
     def set_number(self, n: int):
         self.no_values = n
         self.handle_shuffle()
+
 
     def handle_shuffle(self):
         self.anim.event_source.stop()
@@ -190,6 +226,7 @@ class SortingAnimation():
         self.draw()
 
         self.canvas.draw()
+
 
     def handleToggle(self, checked):
         if checked:
@@ -254,6 +291,16 @@ class SortingAnimation():
             case 'Selection Sort':
                 self.algo = SelectionSort(self.values)
                 self.generator = self.algo.generator()
+                self.barrier = [0] 
+                self.last = [self.barcollection[0],self.barcollection[1]]
+                self.finish_index = [0]
+            case 'Merge Sort':
+                self.algo = MergeSort(self.values)
+
+                start = 0
+                end = len(self.values)
+
+                self.generator = self.algo.generator(start, end, 0)
                 self.barrier = [0] 
                 self.last = [self.barcollection[0],self.barcollection[1]]
                 self.finish_index = [0]
